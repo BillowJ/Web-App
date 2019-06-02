@@ -9,5 +9,7 @@ configs = {
         'password':'password',
         'database':'awesome'
     },
-    'session':'Awesome'
+    'session': {
+        'secret': 'Awesome'
+    }
 }
