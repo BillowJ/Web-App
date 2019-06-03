@@ -105,6 +105,36 @@ async def get_blog(id):
         'comments': comments
     }
 
+@get('/tags/{tag}')
+def get_tags(*, tag, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Blog.findNumber('count(id)', where='tag', regexp=''.join(("'", tag, "'")))
+    p = Page(num, page_index)
+    if num == 0:
+        blogs = []
+    else:
+        blogs = yield from Blog.findAll(where='tag', regexp=''.join(("'", tag, "'")), orderBy='created_at desc', limit=(p.offset, p.limit))
+    return {
+        '__template__': 'blogs.html',
+        'page': p,
+        'blogs': blogs
+    }
+
+@get('/landscape')
+def get_landscape(*, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Blog.findNumber('count(id)', where='tag', regexp="'landscape'")
+    p = Page(num, page_index)
+    if num == 0:
+        blogs = []
+    else:
+        blogs = yield from Blog.findAll(where='tag', regexp="'landscape'", orderBy='created_at desc', limit=(p.offset, p.limit))
+    return {
+        '__template__': 'blogs_sq.html',
+        'page': p,
+        'blogs': blogs
+    }
+
 ## 处理注册页面URL
 @get('/register')
 def register():
@@ -157,7 +187,7 @@ def signout(request):
 ## 获取管理页面
 @get('/manage/')
 def manage():
-    return 'redirect:/manage/comments'
+    return 'redirect:/manage/blogs'
 
 ## 评论管理页面
 @get('/manage/comments')
@@ -288,6 +318,26 @@ async def api_blogs(*, page='1'):
     if num == 0:
         return dict(page=p, blogs=())
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, blogs=blogs)
+
+@get('/api/tags/{tag}')
+def api_blogs_tag(*, tag, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Blog.findNumber('count(id)', where='tag', regexp=''.join(("'", tag, "'")))
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, blogs=())
+    blogs = yield from Blog.findAll(where='tag', regexp=''.join(("'", tag, "'")), orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, blogs=blogs)
+
+@get('/api/landscape')
+def api_landscape(*, page='1'):
+    page_index = get_page_index(page)
+    num = yield from Blog.findNumber('count(id)', where='tag', regexp="'landscape'")
+    p = Page(num, page_index)
+    if num == 0:
+        return dict(page=p, blogs=())
+    blogs = yield from Blog.findAll(where='tag', regexp="'landscape'", orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
 ## 获取日志详情API

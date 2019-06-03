@@ -1,12 +1,10 @@
-<!-- 继承父模板 '__base__.html' -->
 {% extends '__base__.html' %}
-<!--jinja2 title 块内容替换-->
-{% block title %}日志{% endblock %}
-<!--jinja2 beforehead 块内容替换-->
-{% block beforehead %}
-<!--script中构建vue,向后端API提交日志管理操作相关数据-->
-<script>
 
+{% block title %}日志{% endblock %}
+
+{% block beforehead %}
+
+<script>
 function initVM(data) {
     var vm = new Vue({
         el: '#vm',
@@ -38,7 +36,6 @@ function initVM(data) {
     });
     $('#vm').show();
 }
-
 $(function() {
     getJSON('/api/blogs', {
         page: {{ page_index }}
@@ -50,12 +47,10 @@ $(function() {
         initVM(results);
     });
 });
-
 </script>
 
 {% endblock %}
 
-<!--jinja2 content 块内容替换-->
 {% block content %}
     <div class="uk-grid">
     <div class="uk-width-1-1 uk-margin-bottom">
