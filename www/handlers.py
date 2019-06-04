@@ -2,7 +2,7 @@
 #Designed by LiJingJie
 ' url handlers '
 
-import re, time, json, logging, hashlib, base64, asyncio,markdown2
+import re, time, json, logging, hashlib, base64, asyncio,markdown
 from coroweb import get, post
 from apis import Page, APIValueError, APIResourceNotFoundError
 from aiohttp import web
